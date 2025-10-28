@@ -11,14 +11,21 @@ if (isset($_POST['add_course'])) {
     $query = "INSERT INTO courses (course_title, course_code, batch, semester, session) 
               VALUES ('$title', '$code', '$batch', '$semester', '$session')";
     mysqli_query($conn, $query);
-    header("Location: manage_course.php?msg=added");
+    echo "<script>
+        alert('Course added successfully!');
+        window.location.href = 'manage_course.php?msg=added';
+    </script>";
+
     exit;
 }
 
 if (isset($_GET['delete'])) {
     $id = intval($_GET['delete']);
     mysqli_query($conn, "DELETE FROM courses WHERE id = $id");
-    header("Location: manage_course.php?msg=deleted");
+    echo "<script>
+        alert('Course Deleted successfully!');
+        window.location.href = 'manage_course.php?msg=added';
+    </script>";
     exit;
 }
 
@@ -38,7 +45,10 @@ if (isset($_POST['update_course'])) {
               session='$session'
               WHERE id=$id";
     mysqli_query($conn, $query);
-    header("Location: manage_course.php?msg=updated");
+    echo "<script>
+        alert('Course Updated successfully!');
+        window.location.href = 'manage_course.php?msg=added';
+    </script>";
     exit;
 }
 

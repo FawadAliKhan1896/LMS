@@ -16,7 +16,10 @@ if (isset($_POST['add_announcement'])) {
 
     $query = "INSERT INTO announcements (title, description, file, date) VALUES ('$title', '$description', '$file', '$date')";
     mysqli_query($conn, $query);
-    header("Location: announcements.php");
+    echo "<script>
+        alert('Announcement added successfully!');
+        window.location.href = 'announcements.php';
+    </script>";
     exit();
 }
 
@@ -24,7 +27,10 @@ if (isset($_POST['add_announcement'])) {
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     mysqli_query($conn, "DELETE FROM announcements WHERE id = $id");
-    header("Location: announcements.php");
+     echo "<script>
+        alert('Announcement Deleted successfully!');
+        window.location.href = 'announcements.php';
+    </script>";
     exit();
 }
 
@@ -44,7 +50,10 @@ if (isset($_POST['update_announcement'])) {
 
     $query = "UPDATE announcements SET title='$title', description='$description' $fileQuery WHERE id=$id";
     mysqli_query($conn, $query);
-    header("Location: announcements.php");
+     echo "<script>
+        alert('Announcement Updated successfully!');
+        window.location.href = 'announcements.php';
+    </script>";
     exit();
 }
 ?>

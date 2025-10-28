@@ -9,7 +9,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_class'])) {
     $query = "INSERT INTO classes (class_name, section, instructor_id) 
               VALUES ('$class_name', '$section', '$instructor_id')";
     mysqli_query($conn, $query);
-    header("Location: manage_class.php");
+    echo "<script>
+        alert('Course added successfully!');
+        window.location.href = 'manage_class.php?msg=added';
+    </script>";
     exit();
 }
 
@@ -23,14 +26,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_class'])) {
               SET class_name='$class_name', section='$section', instructor_id='$instructor_id' 
               WHERE id=$id";
     mysqli_query($conn, $query);
-    header("Location: manage_class.php");
+    echo "<script>
+        alert('Course Updated successfully!');
+        window.location.href = 'manage_class.php';
+    </script>";
     exit();
 }
 
 if (isset($_GET['delete_id'])) {
     $id = $_GET['delete_id'];
     mysqli_query($conn, "DELETE FROM classes WHERE id = $id");
-    header("Location: manage_class.php");
+    echo "<script>
+        alert('Course Deleted successfully!');
+        window.location.href = 'manage_class.php';
+    </script>";
     exit();
 }
 

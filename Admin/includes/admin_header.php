@@ -8,7 +8,7 @@ $query = "SELECT * FROM users WHERE id = '$admin_id'";
 $result = mysqli_query($conn, $query);
 $user = mysqli_fetch_assoc($result);
 
-$profile_image = !empty($user['profile_image']) ? "../uploads/profile/" . $user['profile_image'] : "../uploads/profile/profile.jpg";
+$profile_picture = !empty($user['profile_picture']) ? "../uploads/profile/" . $user['profile_picture'] : "../uploads/profile/profile.jpg";
 ?>
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -21,7 +21,7 @@ $profile_image = !empty($user['profile_image']) ? "../uploads/profile/" . $user[
   <ul class="navbar-nav ml-auto">
     <li class="nav-item dropdown">
       <a class="nav-link d-flex align-items-center" data-toggle="dropdown" href="#">
-        <img src="<?= $profile_image ?>" alt="Picture" class="rounded-circle"  style="width:35px; height:35px; object-fit:cover; margin-right:8px;"> <span>Admin</span>
+        <img src="<?= $profile_picture ?>" alt="Picture" class="rounded-circle"  style="width:35px; height:35px; object-fit:cover; margin-right:8px;"> <span>Admin</span>
       </a>
 
       <div class="dropdown-menu dropdown-menu-right">

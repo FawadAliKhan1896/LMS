@@ -8,25 +8,25 @@ $query = "SELECT * FROM users WHERE id = '$admin_id'";
 $result = mysqli_query($conn, $query);
 $user = mysqli_fetch_assoc($result);
 
-$profile_image = !empty($user['profile_image']) ? "../uploads/profile/" . $user['profile_image'] : "../uploads/profile/profile.jpg";
+$profile_picture = !empty($user['profile_picture']) ? "../uploads/profile/" . $user['profile_picture'] : "../uploads/profile/profile.jpg";
 
 if (isset($_POST['update_profile'])) {
     $fullName = mysqli_real_escape_string($conn, $_POST['full_name']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $phone = mysqli_real_escape_string($conn, $_POST['phone']);
 
-    if (!empty($_FILES['profile_image']['name'])) {
-        $file_name = time() . '_' . basename($_FILES['profile_image']['name']);
+    if (!empty($_FILES['profile_picture']['name'])) {
+        $file_name = time() . '_' . basename($_FILES['profile_picture']['name']);
         $target_path = "../uploads/profile/" . $file_name;
-        move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_path);
+        move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target_path);
 
-        $update = "UPDATE users SET name='$fullName', email='$email', mobile_no='$phone', profile_image='$file_name' WHERE id='$admin_id'";
+        $update = "UPDATE users SET name='$fullName', email='$email', mobile_no='$phone', profile_picture='$file_name' WHERE id='$admin_id'";
     } else {
         $update = "UPDATE users SET name='$fullName', email='$email', mobile_no='$phone' WHERE id='$admin_id'";
     }
 
     if (mysqli_query($conn, $update)) {
-        echo "<script>alert('Profile updated successfully!'); window.location.href='profile_content.php';</script>";
+        echo "<script>alert('Profile updated successfully!'); window.location.href='profile.php';</script>";
         exit;
     }
 }
@@ -43,7 +43,7 @@ if (isset($_POST['change_password'])) {
         if ($new_pass === $confirm_pass) {
             $hashed = md5($new_pass);
             mysqli_query($conn, "UPDATE users SET password='$hashed' WHERE id='$admin_id'");
-            echo "<script>alert('Password updated successfully!'); window.location.href='profile_content.php';</script>";
+            echo "<script>alert('Password updated successfully!'); window.location.href='profile.php';</script>";
         } else {
             echo "<script>alert('New passwords do not match!');</script>";
         }
@@ -82,7 +82,7 @@ if (isset($_POST['change_password'])) {
 </style>
 
 <div class="profile-card text-center">
-  <img src="<?= $profile_image ?>" alt="Profile Picture" class="profile-img" id="profileImage">
+  <img src="<?= $profile_picture ?>" alt="Profile Picture" class="profile-img" id="profileImage">
   <h3 id="userName"><?= htmlspecialchars($user['name']) ?></h3>
   <p class="text-muted" id="userRole"><?= ucfirst($user['role']) ?></p>
 
@@ -107,7 +107,7 @@ if (isset($_POST['change_password'])) {
 
     <div class="form-group text-left">
       <label>Change Profile Picture</label>
-      <input type="file" name="profile_image" class="form-control-file">
+      <input type="file" name="profile_picture" class="form-control-file">
     </div>
 
     <button type="submit" name="update_profile" class="btn btn-block edit-btn" style="background-color:#69263a; border-color:#69263a; color:#fff;">

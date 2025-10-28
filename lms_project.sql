@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Oct 28, 2025 at 08:17 AM
+-- Generation Time: Oct 28, 2025 at 09:53 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -273,10 +273,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `father_name`, `mobile_no`, `email`, `password`, `gender`, `role`, `class_id`, `roll_number`, `profile_picture`, `created_at`) VALUES
-(1, 'Ali Khan', 'Abdul Khan', '03001234567', 'admin@admin.com', '64e1b8d34f425d19e1ee2ea7236d3028', 'Male', 'Admin', NULL, NULL, 'admin.jpg', '2025-10-27 05:25:30'),
-(2, 'Ahmed Faraz', 'Faraz Ahmed', '03111234567', 'instructor@instructor.com', '6b55d78e32fa03ff5a74e3c1892b3c1a', 'Male', 'Instructor', NULL, NULL, 'instructor.jpg', '2025-10-27 05:25:30'),
-(3, 'Hasan Ali', 'Ali Raza', '03221234567', 'student@student.com', '1d8525fcd73960598d27eef2e472c114', 'Male', 'Student', 1, '102', 'student.jpg', '2025-10-27 05:25:30'),
-(7, 'Testing User', 'Testing Father User', '03123456789', 'testinguser@testing.com', 'bbd44c96b0afd5211eac58f92e851810', 'Other', 'Student', 1, '101', '1761572356_122121.png', '2025-10-27 13:39:16');
+(1, 'Ali Khan', 'Abdul Khan', '03001234567', 'admin@admin.com', 'admin@admin.com', 'Male', 'Admin', NULL, NULL, 'admin.jpg', '2025-10-27 05:25:30'),
+(2, 'Ahmed Faraz', 'Faraz Ahmed', '03111234567', 'instructor@instructor.com', 'instructor@instructor.com', 'Male', 'Instructor', NULL, NULL, 'instructor.jpg', '2025-10-27 05:25:30'),
+(3, 'Hasan Ali', 'Ali Raza', '03221234567', 'student@student.com', 'student@student.com', 'Male', 'Student', 1, '102', 'student.jpg', '2025-10-27 05:25:30'),
+(7, 'Testing User', 'Testing Father User', '03123456789', 'testinguser@testing.com', 'testinguser@testing.com', 'Other', 'Student', 1, '101', '1761572356_122121.png', '2025-10-27 13:39:16'),
+(9, 'Password Testing', 'Password Testing', '03123456789', 'passwordtesting@gmail.com', 'passwordtesting@gmail.com', 'Other', 'Instructor', 1, '', '1761637800_122121.png', '2025-10-28 07:50:00');
 
 --
 -- Indexes for dumped tables
@@ -442,7 +443,7 @@ ALTER TABLE `task_submissions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
