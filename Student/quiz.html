@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Question Paper</title>
+<link rel="shortcut icon" href="logo2.png" type="image/x-icon">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<style>
+:root{--primary:#69263a;}
+body{font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:#f4f6f9;padding:20px;}
+.quiz-card{max-width:900px;margin:10px auto;padding:18px;background:#fff;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.08);}
+.question{padding:12px;border:1px solid #e6e9ee;border-radius:6px;margin-bottom:12px;}
+.question strong{font-weight:700;}
+.options{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+.quiz-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.quiz-nav{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;}
+.quiz-nav button{padding:6px 10px;border-radius:4px;border:1px solid var(--primary);background:#fff;color:var(--primary);cursor:pointer;}
+.quiz-nav button.active{background:var(--primary);color:#fff;}
+.timer{font-weight:700;color:var(--primary);}
+.correct{background-color:#d4edda; border:1px solid #c3e6cb; color:#155724; padding:8px; border-radius:6px;}
+.incorrect{background-color:#f8d7da; border:1px solid #f5c6cb; color:#721c24; padding:8px; border-radius:6px;}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:9999;}
+.modal-box{background:#fff;padding:18px;border-radius:8px;text-align:left;max-width:800px;width:94%;max-height:85vh;overflow:auto;}
+*{user-select:none;-webkit-user-select:none;-moz-user-select:none;}
+.badge-disq{background:#c82333;color:#fff;padding:6px 8px;border-radius:6px;font-weight:600;}
+.muted-note{font-size:0.9rem;color:#6b7280}
+.selected-option{  background-color:#d4edda; border-radius:6px;padding:6px;}
+</style>
+</head>
+<body>
+
+<div class="quiz-card" id="quizContainer" tabindex="0">
+  <div class="quiz-header">
+    <div>
+      <h4 style="margin:0">E-Commerce -B </h4>
+    </div>
+    <div style="text-align:right">
+      <div class="timer" id="timer">Time: 40:00</div>
+      <div style="margin-top:6px"><span id="statusBadge"></span></div>
+    </div>
+  </div>
+
+  <div id="questionsContainer"></div>
+  <div class="quiz-nav" id="navButtons"></div>
+
+  <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <button id="prevBtn" class="btn btn-secondary">Previous</button>
+      <button id="nextBtn" class="btn btn-secondary">Next</button>
+    </div>
+    <div>
+      <button id="submitBtn" class="btn btn-success">Submit Quiz</button>
+    </div>
+  </div>
+
+<!-- Result / Disqualify Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal-box" role="dialog" aria-modal="true">
+    <div id="modalBody"></div>
+    <div style="text-align:right;margin-top:12px">
+      <a href="myexams.html" class="btn btn-primary">Return to My Exams</a>
+    </div>
+  </div>
+</div>
+<script>
+
+
+/* =========================
+   One-time Attempt Check (with temporary reset key)
+   ========================= */
+const QUIZ_KEY = 'quiz_attempt_status';
+const attemptStatus = localStorage.getItem(QUIZ_KEY);
+
+// Temporary reset shortcut — press R while holding Alt key to reset attempt
+window.addEventListener('keydown', (e) => {
+  if (e.altKey && e.key.toLowerCase() === 'n') {
+    localStorage.removeItem(QUIZ_KEY);
+    alert('Quiz attempt has been reset. You can now reattempt.');
+    location.reload();
+  }
+});
+
+if (attemptStatus === 'completed' || attemptStatus === 'disqualified') {
+  alert('You have already attempted this quiz. Please contact the administrator for re-attempt.');
+  document.body.innerHTML = '<h3 style="text-align:center; color:red; margin-top:50px;">Quiz Already Attempted / Disqualified</h3>';
+  throw new Error('Quiz attempt blocked');
+}
+
+function markAttempted(status) {
+  localStorage.setItem(QUIZ_KEY, status);
+}
+
+/* =========================
+   Questions Config
+   ========================= */
+const QUESTIONS = [
+  {
+    q: "E-commerce primarily refers to:",
+    options: [
+      "Buying and selling goods offline",
+      "Buying and selling goods and services online",
+      "Only promoting products online",
+      "Creating websites for companies"
+    ],
+    a: 1
+  },
+  {
+    q: "Which of the following is not a type of e-commerce?",
+    options: ["B2B", "C2C", "G2G", "P2S"],
+    a: 3
+  },
+  {
+    q: "The main advantage of e-commerce over traditional business is:",
+    options: [
+      "Limited market reach",
+      "24/7 availability",
+      "High operational costs",
+      "Local-only access"
+    ],
+    a: 1
+  },
+  {
+    q: "Which payment method is most common in e-commerce?",
+    options: ["Cash on delivery", "Barter trade", "Online transfer", "Token exchange"],
+    a: 2
+  },
+  {
+    q: "Which of the following is an example of an e-commerce platform?",
+    options: ["Gmail", "Shopify", "Zoom", "Wikipedia"],
+    a: 1
+  },
+  {
+    q: "The most important element for a logo design is:",
+    options: [
+      "Number of colors",
+      "Simplicity and recognizability",
+      "Size of the file",
+      "Number of shapes used"
+    ],
+    a: 1
+  },
+  {
+    q: "A product banner should primarily aim to:",
+    options: [
+      "Confuse the customer",
+      "Promote discounts and products visually",
+      "Replace website text content",
+      "Slow down the website loading speed"
+    ],
+    a: 1
+  },
+  {
+    q: "In logo design, “vector format” is important because it:",
+    options: [
+      "Makes the image blurry",
+      "Allows resizing without losing quality",
+      "Is used only for photographs",
+      "Reduces design quality"
+    ],
+    a: 1
+  },
+  {
+    q: "Which of the following tools is best for creating banners?",
+    options: ["Microsoft Word", "Canva", "Excel", "Notepad"],
+    a: 1
+  },
+  {
+    q: "A good logo must represent:",
+    options: [
+      "The company’s brand identity",
+      "Random design trends",
+      "Only the founder’s name",
+      "Brightest color combinations"
+    ],
+    a: 0
+  },
+  {
+    q: "What is the correct format for a professional business email?",
+    options: [
+      "coolgirl123@gmail.com",
+      "info@brandname.com",
+      "iloveshopping@yahoo.com",
+      "brandname@random.net"
+    ],
+    a: 1
+  },
+  {
+    q: "What is the main purpose of using folders in Google Drive?",
+    options: [
+      "To store movies",
+      "To organize and manage files efficiently",
+      "To delete old files",
+      "To hide data"
+    ],
+    a: 1
+  },
+  {
+    q: "Business emails should always include:",
+    options: [
+      "Emojis and GIFs",
+      "Subject line and signature",
+      "Random greetings",
+      "Long attachments"
+    ],
+    a: 1
+  },
+  {
+    q: "Shared drives in Google Drive are used for:",
+    options: [
+      "Personal photos",
+      "Team collaboration and file sharing",
+      "Music storage",
+      "Backup of games"
+    ],
+    a: 1
+  },
+  {
+    q: "Using a business domain email (like name@company.com) increases:",
+    options: [
+      "Professional credibility",
+      "Spam rate",
+      "Data loss",
+      "Email size"
+    ],
+    a: 0
+  },
+  {
+    q: "Meta AI tools are mainly used for:",
+    options: [
+      "Entertainment only",
+      "Business automation and customer engagement",
+      "File compression",
+      "Gaming"
+    ],
+    a: 1
+  },
+  {
+    q: "Which Meta platform is commonly used for online business marketing?",
+    options: ["Facebook", "Google Drive", "Wikipedia", "Outlook"],
+    a: 0
+  },
+  {
+    q: "Meta Business Suite allows users to:",
+    options: [
+      "Create websites",
+      "Manage Facebook and Instagram business pages",
+      "Edit videos",
+      "Build operating systems"
+    ],
+    a: 1
+  },
+  {
+    q: "Using Meta AI for ads helps in:",
+    options: [
+      "Automatically creating and optimizing campaigns",
+      "Deleting customer data",
+      "Slowing ad performance",
+      "Reducing visibility"
+    ],
+    a: 0
+  },
+  {
+    q: "Chatbots powered by Meta AI are used for:",
+    options: [
+      "Data entry",
+      "Automated customer support",
+      "File sharing",
+      "Video production"
+    ],
+    a: 1
+  },
+  {
+    q: "HTML is used for:",
+    options: [
+      "Designing the structure of web pages",
+      "Adding colors to web pages",
+      "Editing images",
+      "Storing databases"
+    ],
+    a: 0
+  },
+  {
+    q: "CSS is mainly used for:",
+    options: [
+      "Structuring content",
+      "Styling and layout of web pages",
+      "Writing programs",
+      "Creating pop-ups"
+    ],
+    a: 1
+  },
+  {
+    q: "Which HTML tag is used to create a hyperlink?",
+    options: ["&lt;a&gt;", "&lt;link&gt;", "&lt;href&gt;", "&lt;url&gt;"],
+    a: 0
+  },
+  {
+    q: "To change text color in CSS, we use:",
+    options: ["font-color:", "text-color:", "color:", "background:"],
+    a: 2
+  },
+  {
+    q: "Which of the following is the correct structure of an HTML document?",
+    options: [
+      "&lt;html&gt;&lt;head&gt;&lt;title&gt;&lt;/title&gt;&lt;body&gt;&lt;/body&gt;&lt;/head&gt;&lt;/html&gt;",
+      "&lt;html&gt;&lt;body&gt;&lt;title&gt;&lt;/title&gt;&lt;/body&gt;&lt;/html&gt;",
+      "&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;",
+      "&lt;html&gt;&lt;body&gt;&lt;head&gt;&lt;/head&gt;&lt;/body&gt;&lt;/html&gt;"
+    ],
+    a: 2
+  },
+  {
+    q: "Canva is mainly used for:",
+    options: [
+      "Data entry",
+      "Graphic design and content creation",
+      "Programming",
+      "File encryption"
+    ],
+    a: 1
+  },
+  {
+    q: "In Canva, “Templates” help users to:",
+    options: [
+      "Start designs easily with pre-made layouts",
+      "Delete existing projects",
+      "Create code files",
+      "Edit only videos"
+    ],
+    a: 0
+  },
+  {
+    q: "To align objects in Canva, you use:",
+    options: ["Ruler and guides", "Keyboard shortcuts only", "Animation panel", "Browser zoom"],
+    a: 0
+  },
+  {
+    q: "The “Brand Kit” feature in Canva allows:",
+    options: [
+      "Adding brand colors, fonts, and logos",
+      "Importing coding languages",
+      "Making 3D models",
+      "Installing plugins"
+    ],
+    a: 0
+  },
+  {
+    q: "When sharing a Canva design for teamwork, you should:",
+    options: [
+      "Use the “Share” button and grant edit/view access",
+      "Download and email the file only",
+      "Print and distribute manually",
+      "Post it on random websites"
+    ],
+    a: 0
+  }
+];
+
+let currentQuestion = 0;
+let answers = Array(QUESTIONS.length).fill(null);
+let timerInterval = null;
+let remaining = 40*60; // seconds (60 minutes)
+let disqualified = false;
+let disqReason = '';
+let autoSubmitted = false;
+/* =========================
+   NEW: Shuffle Questions
+   ========================= */
+function shuffleQuestions(array) {
+  // Fisher–Yates shuffle
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+/* Call shuffle before building the quiz UI */
+shuffleQuestions(QUESTIONS);
+
+/* =========================
+   Continue with existing logic
+   ========================= */
+// Build questions
+buildQuestions();
+buildNav();
+gotoQuestion(0);
+startTimer();
+/* =========================
+   Build UI
+   ========================= */
+function formatTime(s){const m=Math.floor(s/60).toString().padStart(2,'0'); const sec=(s%60).toString().padStart(2,'0'); return m+':'+sec;}
+
+function buildQuestions(){
+  const container = document.getElementById('questionsContainer');
+  container.innerHTML='';
+  QUESTIONS.forEach((q, idx) => {
+    const div = document.createElement('div');
+    div.className = 'question';
+    div.id = 'q'+idx;
+    div.innerHTML = `<strong>Q${idx+1}.</strong> <strong>${q.q}</strong>`;
+    const opts = document.createElement('div'); opts.className='options';
+    q.options.forEach((opt,i)=>{
+      const label = document.createElement('label');
+      label.style.cursor='pointer';
+      label.innerHTML=`<input type="radio" name="q${idx}" value="${i}"> ${opt}`;
+      opts.appendChild(label);
+    });
+    div.appendChild(opts);
+    container.appendChild(div);
+  });
+}
+
+function buildNav(){
+  const nav = document.getElementById('navButtons');
+  nav.innerHTML='';
+  QUESTIONS.forEach((_, idx)=>{
+    const btn = document.createElement('button');
+    btn.textContent = idx+1;
+    btn.onclick = ()=>gotoQuestion(idx);
+    nav.appendChild(btn);
+  });
+}
+
+function gotoQuestion(idx){
+  currentQuestion = idx;
+  QUESTIONS.forEach((_,i)=>document.getElementById('q'+i).style.display = (i===idx?'block':'none'));
+  document.querySelectorAll('#navButtons button').forEach((b,i)=>b.classList.toggle('active', i===idx));
+  refreshNavAnswered();
+}
+
+function refreshNavAnswered(){
+  document.querySelectorAll('#navButtons button').forEach((b,i)=>{
+    if(answers[i]!==null){b.style.borderColor='#28a745';b.style.color='#28a745';b.style.fontWeight='700';}
+    else {b.style.borderColor='';b.style.color='';b.style.fontWeight='';}
+  });
+}
+
+/* =========================
+   Timer
+   ========================= */
+function startTimer(){
+  document.getElementById('timer').textContent='Time: '+formatTime(remaining);
+  timerInterval = setInterval(()=>{
+    remaining--; document.getElementById('timer').textContent='Time: '+formatTime(remaining);
+    if(remaining<=0){clearInterval(timerInterval); submitQuiz('Time is up');}
+  },1000);
+}
+
+function collectAnswers(){
+  QUESTIONS.forEach((_,idx)=>{
+    const sel = document.querySelector(`input[name=q${idx}]:checked`);
+    answers[idx] = sel ? parseInt(sel.value) : null;
+  });
+  refreshNavAnswered();
+}
+
+function showModal(html){
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('overlay').style.display='flex';
+}
+
+function closeModal(){document.getElementById('overlay').style.display='none';}
+
+function submitQuiz(reason){
+  if(autoSubmitted) return; autoSubmitted=true; clearInterval(timerInterval); collectAnswers();
+  let correct=0,incorrect=0;
+  if(disqualified){correct=0;incorrect=QUESTIONS.length; markAttempted('disqualified');}
+  else {QUESTIONS.forEach((q,i)=>{if(answers[i]===q.a) correct++;else incorrect++;}); markAttempted('completed');}
+
+  let header = `<h4>Quiz Result</h4><p><strong>Reason:</strong> ${reason||'User submitted'}</p>`;
+  header += `<p>Total Questions: <strong>${QUESTIONS.length}</strong> | Correct: <strong>${correct}</strong> | Incorrect: <strong>${incorrect}</strong> | <span style="font-weight:800">Score: ${disqualified?0:correct}</span></p><hr>`;
+
+  let detail=''; QUESTIONS.forEach((q,i)=>{
+    let userAnsText=(answers[i]!==null)?q.options[answers[i]]:'Not Answered';
+    let correctText=q.options[q.a];
+    let blockClass=(!disqualified && answers[i]===q.a)?'correct':'incorrect';
+    if(disqualified) blockClass='incorrect';
+    detail+=`<div class="${blockClass}"><strong>Q${i+1}:</strong> ${q.q}<br>
+             Your Answer: ${userAnsText}<br>
+             Correct Answer: ${correctText}</div><br>`;
+  });
+
+  if(disqualified){
+    header=`<div style="display:flex;justify-content:space-between;align-items:center">
+              <div><h4 style="margin:0">Disqualified — Score: 0</h4>
+              <div class="muted-note">Reason: ${disqReason}</div></div>
+              <div><span class="badge badge-disq">DISQUALIFIED</span></div>
+            </div><hr>`+header;
+  }
+
+  showModal(header+detail);
+  document.getElementById('statusBadge').innerHTML=disqualified?'<span class="badge-disq">Disqualified</span>':'<span class="badge badge-success">Completed</span>';
+}
+
+/* =========================
+   Anti-cheat
+   ========================= */
+function markDisqualified(reason){if(disqualified)return; disqualified=true; disqReason=reason; console.warn('Disqualified:',reason);}
+// Right-click completely disabled, no disqualify
+window.addEventListener('contextmenu', e=>{
+  e.preventDefault();
+});
+window.addEventListener('copy', e=>{markDisqualified('Copy action detected'); submitQuiz('Auto-submitted: Copy');});
+window.addEventListener('keydown', e=>{
+  const key=e.key; const ctrl=e.ctrlKey||e.metaKey;
+  if(ctrl&&(key==='c'||key==='C'||key==='Insert')){e.preventDefault(); markDisqualified('Keyboard copy'); submitQuiz('Auto-submitted: Copy shortcut'); return;}
+  if(key==='Escape'||key==='`'){e.preventDefault(); markDisqualified(`Disallowed key pressed: ${key}`); submitQuiz(`Auto-submitted: Disallowed key (${key})`); return;}
+  if(ctrl&&(key.toLowerCase()==='a'||key.toLowerCase()==='s'||key.toLowerCase()==='p')){e.preventDefault(); markDisqualified(`Prohibited shortcut: Ctrl+${key.toUpperCase()}`); submitQuiz(`Auto-submitted: Ctrl+${key.toUpperCase()}`); return;}
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){markDisqualified('Tab/window hidden'); submitQuiz('Auto-submitted: Tab/window hidden');}});
+window.addEventListener('blur',()=>{markDisqualified('Window lost focus'); submitQuiz('Auto-submitted: Window blur');});
+window.addEventListener('beforeunload', e=>{if(!autoSubmitted){markDisqualified('Page unload/navigation'); submitQuiz('Auto-submitted: Page unload'); e.preventDefault(); e.returnValue=''; return '';}});
+document.addEventListener('selectstart', e=>{e.preventDefault();});
+
+/* =========================
+   Event wiring
+   ========================= */
+document.getElementById('prevBtn').addEventListener('click', ()=>{if(currentQuestion>0) gotoQuestion(currentQuestion-1);});
+document.getElementById('nextBtn').addEventListener('click', ()=>{if(currentQuestion<QUESTIONS.length-1) gotoQuestion(currentQuestion+1);});
+document.getElementById('submitBtn').addEventListener('click', ()=>{if(confirm('Submit Quiz?')){collectAnswers(); submitQuiz('User submitted');}});
+document.getElementById('closeModal').addEventListener('click', ()=>{closeModal();});
+document.addEventListener('change', e=>{if(e.target && e.target.matches('input[type="radio"]')){const name=e.target.getAttribute('name'); if(name && name.startsWith('q')){const idx=parseInt(name.substring(1)); answers[idx]=parseInt(e.target.value); refreshNavAnswered();}}});
+document.addEventListener('keydown', e=>{if(!isNaN(e.key) && e.key!==' '){const n=parseInt(e.key); if(n>=1 && n<=QUESTIONS.length) gotoQuestion(n-1);}});
+
+/* 
+/* =========================
+   Init
+   ========================= */
+buildQuestions(); buildNav(); gotoQuestion(0); startTimer();
+document.getElementById('quizContainer').focus();
+document.getElementById('statusBadge').innerHTML='<span class="badge badge-info">In Progress</span>';
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

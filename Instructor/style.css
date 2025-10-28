@@ -1,0 +1,25 @@
+
+  /* Buttons  */
+  .btn-primary,
+  .btn-info {
+    background-color: #69263a !important;
+    border-color: #69263a !important;
+    color: #fff !important;
+  }
+
+  .btn-primary:hover,
+  .btn-info:hover {
+    background-color: #501c2c !important; /* hover darker shade */
+    border-color: #501c2c !important;
+  }
+
+  /* Card headers */
+  .card-primary:not(.card-outline) > .card-header {
+    background-color: #69263a !important;
+    border-color: #69263a !important;
+    color: #fff !important;
+  }
+
+  .card-primary:not(.card-outline) > .card-header .card-title {
+    color: #fff !important;
+  }

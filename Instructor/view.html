@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Result Evaluation</title>
+
+  <!-- AdminLTE CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body { background: #f4f6f9; }
+    .content-wrapper { padding: 20px; }
+    .card { border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .card-header { background: #69263a; color: #fff; font-weight: 500; font-size: 18px; border-bottom: none; }
+    .custom-table thead { background: #69263a; color: #fff; text-align: center; }
+    .custom-table th, .custom-table td { vertical-align: middle !important; text-align: center; }
+    .custom-table tbody tr:hover { background-color: #f9f1f4; transition: 0.2s; }
+    .btn-print { background: #69263a; color: #fff; border-radius: 20px; padding: 8px 16px; margin-top: 15px; }
+    .btn-print:hover { background: #28a745; color: #fff; }
+    .action-btn { background: #69263a; color: #fff; border: none; border-radius: 5px; padding: 4px 8px; margin: 0 2px; font-size: 13px; cursor: pointer; transition: 0.3s; }
+    .action-btn:hover { background: #28a745; }
+    .modal-lg { max-width: 95%; }
+    iframe { width: 100%; height: 70vh; border: none; border-radius: 8px; }
+    .marks-input { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 15px; }
+    .marks-input input { width: 120px; padding: 5px; text-align: center; border-radius: 6px; border: 1px solid #ccc; }
+    .save-btn { background: #69263a; color: white; padding: 6px 14px; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+    .save-btn:hover { background: #28a745; }
+  </style>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+
+  <!-- Navbar -->
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+    </li>
+  </ul>
+
+  <ul class="navbar-nav ml-auto">
+    <!-- Profile Picture Dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link d-flex align-items-center" data-toggle="dropdown" href="#">
+        <!-- Profile Image -->
+               <img src="/Profile.jpg" alt="Picture" class="rounded-circle"  style="width:35px; height:35px; object-fit:cover; margin-right:8px;"> <span> Instructor </span>
+      </a>
+
+      <div class="dropdown-menu dropdown-menu-right">
+        <a href="profile.html" class="dropdown-item"><i class="fas fa-user"></i> Profile</a>
+        <a href="Settings.html" class="dropdown-item"><i class="fas fa-cog"></i> Settings</a>
+        <div class="dropdown-divider"></div>
+        <a href="/index.html" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </li>
+  </ul>
+</nav>
+
+  <!-- /.navbar -->
+
+  <!-- Sidebar -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="#" class="brand-link">
+           <i class="fas fa-graduation-cap ml-2"></i>
+          <span class="brand-text font-weight-light">Quiz Portal</span>
+    </a>
+
+     <!-- Sidebar Menu -->
+<div class="sidebar">
+  <nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+      <li class="nav-item">
+           <a href="insdashboard.html" class="nav-link" data-section="dashboard">
+          <i class="nav-icon fas fa-tachometer-alt"></i>
+          <p>Dashboard</p>
+        </a>
+      </li>
+            <li class="nav-item">
+        <a href="questionadd.html" class="nav-link" data-section="add-mcq">
+          <i class="nav-icon fas fa-plus-circle"></i>
+          <p>Add Questions</p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="questions.html" class="nav-link" data-section="question-bank">
+          <i class="nav-icon fas fa-database"></i>
+          <p>Question Bank</p>
+        </a>
+      </li>
+      <li class="nav-item has-treeview">
+        <a href="#" class="nav-link">
+          <i class="nav-icon fas fa-bullhorn"></i>
+          <p>
+            Announcements
+            <i class="right fas fa-angle-left"></i>
+          </p>
+        </a>
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="Upload.html" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Upload Material</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="Task.html" class="nav-link">
+              <i class="far fa-circle nav-icon"></i>
+              <p>Create Task</p>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a href="submission.html" class="nav-link" data-section="results">
+            <i class="nav-icon fas fa-file-alt"></i>
+          <p>Submissions</p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="results.html" class="nav-link" data-section="results">
+          <i class="nav-icon fas fa-chart-bar"></i>
+          <p>Result Analysis</p>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="/index.html" class="nav-link">
+          <i class="nav-icon fas fa-sign-out-alt"></i>
+          <p>Logout</p>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content -->
+  <div class="content-wrapper">
+    <section class="content">
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-header"><i class="fas fa-user-graduate"></i> Student Result Details</div>
+          <div class="card-body">
+            <table class="table table-bordered table-hover custom-table" id="resultTable">
+              <thead>
+                <tr>
+                  <th>Roll No</th>
+                  <th>Name</th>
+                  <th>Total Marks</th>
+                  <th>Obtained Score</th>
+                  <th>Submitted At</th>
+                  <th>Remarks</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <button class="btn btn-print" onclick="window.print();"><i class="fas fa-print"></i> Print</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- PDF Modal with Marks Input -->
+  <div class="modal fade" id="pdfModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="background:#69263a; color:white;">
+          <h5 class="modal-title"><i class="fas fa-file-pdf"></i> Student Answer Sheet</h5>
+          <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <iframe id="pdfFrame"></iframe>
+          <div class="marks-input">
+            <label><strong>Obtained Score:</strong></label>
+            <input type="number" id="obtainedMarks" min="0">
+            <button class="save-btn" onclick="saveMarks()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+<script>
+  const results = [
+    {roll:"BS-101", name:"Ali Khan", total:20, obtained:18, submitted:"2025-09-20 10:30", remarks:"Timeout Auto Submitted", pdf:"pdfs/BS-101.pdf"},
+    {roll:"BS-102", name:"Sara Ahmed", total:40, obtained:36, submitted:"2025-09-21 09:50", remarks:"Copycase", pdf:"pdfs/BS-102.pdf"},
+    {roll:"BS-103", name:"Ahmed Raza", total:50, obtained:0, submitted:"2025-09-22 11:15", remarks:"Incomplete Auto Focus", pdf:"pdfs/BS-103.pdf"},
+    {roll:"BS-104", name:"Hina Malik", total:25, obtained:22, submitted:"2025-09-20 11:00", remarks:"Submit by User", pdf:"pdfs/BS-104.pdf"},
+  ];
+
+  let currentRoll = null;
+  const tbody = document.querySelector("#resultTable tbody");
+
+  results.forEach(r => {
+    const row = `<tr id="row-${r.roll}">
+        <td>${r.roll}</td>
+        <td>${r.name}</td>
+        <td>${r.total}</td>
+        <td class="obtained">${r.obtained}</td>
+        <td>${r.submitted}</td>
+        <td>${r.remarks}</td>
+        <td>
+          <button class="action-btn" onclick="viewPDF('${r.roll}','${r.pdf}')"><i class="fas fa-eye"></i></button>
+          <button class="action-btn" onclick="editRow('${r.roll}')"><i class="fas fa-edit"></i></button>
+        </td>
+      </tr>`;
+    tbody.insertAdjacentHTML("beforeend", row);
+  });
+
+  function viewPDF(roll, pdfPath){
+    currentRoll = roll;
+    const student = results.find(r => r.roll === roll);
+    document.getElementById("pdfFrame").src = pdfPath;
+    document.getElementById("obtainedMarks").value = student.obtained;
+    $("#pdfModal").modal("show");
+  }
+
+  function saveMarks(){
+    const marks = document.getElementById("obtainedMarks").value;
+    if(marks === "" || marks < 0){ alert("Please enter valid marks."); return; }
+    document.querySelector(`#row-${currentRoll} .obtained`).textContent = marks;
+    const student = results.find(r => r.roll === currentRoll);
+    student.obtained = marks;
+    $("#pdfModal").modal("hide");
+    alert(`Marks updated for ${currentRoll}: ${marks}`);
+  }
+
+  function editRow(roll){ alert("Edit record of " + roll); }
+</script>
+
+</body>
+</html>

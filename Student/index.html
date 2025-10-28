@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GCUH Testing System</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="logo2.png" type="image">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="login-box">
+      <img src="logo2.png" alt="Logo" class="logo" />
+      <h2> GCUH Testing System</h2>
+      <p class="portal">BBSHRRDB Quiz Portal</p>
+        <form onsubmit="return validateForm()">
+        <input type="text" id="username" placeholder="XIII-B2-EC-A-001" required />
+        <div id="userError" class="error"></div>
+
+        <div class="password-box">
+          <input type="password" id="password" placeholder="Enter Password" required />
+          <div id="passError" class="error"></div>
+        </div>
+        <button type="submit">Sign In</button>
+      </form>
+      
+      <p class="footer-text">
+        Contact with <strong>Mr. Nizakat Hussain | Mr. Asif</strong><br />
+        for login ID Password
+      </p>
+    </div>
+  </div>
+
+  <script>
+  // Authorized Roll Numbers
+  const authorizedUsers = [
+    // === AI-A series (001–028) ===
+  "XIII-B2-AI-A-001","XIII-B2-AI-A-002","XIII-B2-AI-A-003","XIII-B2-AI-A-004",
+  "XIII-B2-AI-A-005","XIII-B2-AI-A-006","XIII-B2-AI-A-007","XIII-B2-AI-A-008",
+  "XIII-B2-AI-A-009","XIII-B2-AI-A-010","XIII-B2-AI-A-011","XIII-B2-AI-A-012",
+  "XIII-B2-AI-A-013","XIII-B2-AI-A-014","XIII-B2-AI-A-015","XIII-B2-AI-A-016",
+  "XIII-B2-AI-A-017","XIII-B2-AI-A-018","XIII-B2-AI-A-019","XIII-B2-AI-A-020",
+  "XIII-B2-AI-A-021","XIII-B2-AI-A-022","XIII-B2-AI-A-023","XIII-B2-AI-A-024",
+  "XIII-B2-AI-A-025","XIII-B2-AI-A-026","XIII-B2-AI-A-027","XIII-B2-AI-A-028",
+
+  // === AI-B series (026–053) ===
+  "XIII-B2-AI-B-026","XIII-B2-AI-B-027","XIII-B2-AI-B-028","XIII-B2-AI-B-029",
+  "XIII-B2-AI-B-030","XIII-B2-AI-B-031","XIII-B2-AI-B-032","XIII-B2-AI-B-033",
+  "XIII-B2-AI-B-034","XIII-B2-AI-B-035","XIII-B2-AI-B-036","XIII-B2-AI-B-037",
+  "XIII-B2-AI-B-038","XIII-B2-AI-B-039","XIII-B2-AI-B-040","XIII-B2-AI-B-041",
+  "XIII-B2-AI-B-042","XIII-B2-AI-B-043","XIII-B2-AI-B-044","XIII-B2-AI-B-045",
+  "XIII-B2-AI-B-046","XIII-B2-AI-B-047","XIII-B2-AI-B-048","XIII-B2-AI-B-049",
+  "XIII-B2-AI-B-050","XIII-B2-AI-B-051","XIII-B2-AI-B-052","XIII-B2-EC-B-053",
+
+  // === CS series (001–025) ===
+  "XIII-B2-CS-001","XIII-B2-CS-002","XIII-B2-CS-003","XIII-B2-CS-004",
+  "XIII-B2-CS-005","XIII-B2-CS-006","XIII-B2-CS-007","XIII-B2-CS-008",
+  "XIII-B2-CS-009","XIII-B2-CS-010","XIII-B2-CS-011","XIII-B2-CS-012",
+  "XIII-B2-CS-013","XIII-B2-CS-014","XIII-B2-CS-015","XIII-B2-CS-016",
+  "XIII-B2-CS-017","XIII-B2-CS-018","XIII-B2-CS-019","XIII-B2-CS-020",
+  "XIII-B2-CS-021","XIII-B2-CS-022","XIII-B2-CS-023","XIII-B2-CS-024",
+  "XIII-B2-CS-025","XIII-B2-EC-B-026","XIII-B2-EC-B-027",
+
+  // === EC-A series (001–028) ===
+  "XIII-B2-EC-A-001","XIII-B2-EC-A-002","XIII-B2-EC-A-003","XIII-B2-EC-A-004",
+  "XIII-B2-EC-A-005","XIII-B2-EC-A-006","XIII-B2-EC-A-007","XIII-B2-EC-A-008",
+  "XIII-B2-EC-A-009","XIII-B2-EC-A-010","XIII-B2-EC-A-011","XIII-B2-EC-A-012",
+  "XIII-B2-EC-A-013","XIII-B2-EC-A-014","XIII-B2-EC-A-015","XIII-B2-EC-A-016",
+  "XIII-B2-EC-A-017","XIII-B2-EC-A-018","XIII-B2-EC-A-019","XIII-B2-EC-A-020",
+  "XIII-B2-EC-A-021","XIII-B2-EC-A-022","XIII-B2-EC-A-023","XIII-B2-EC-A-024",
+  "XIII-B2-EC-A-025","XIII-B2-EC-A-026","XIII-B2-EC-A-027","XIII-B2-EC-A-028",
+
+  // === EC-B series (026–053) ===
+  "XIII-B2-EC-B-026","XIII-B2-EC-B-027","XIII-B2-EC-B-028","XIII-B2-EC-B-029",
+  "XIII-B2-EC-B-030","XIII-B2-EC-B-031","XIII-B2-EC-B-032","XIII-B2-EC-B-033",
+  "XIII-B2-EC-B-034","XIII-B2-EC-B-035","XIII-B2-EC-B-036","XIII-B2-EC-B-037",
+  "XIII-B2-EC-B-038","XIII-B2-EC-B-039","XIII-B2-EC-B-040","XIII-B2-EC-B-041",
+  "XIII-B2-EC-B-042","XIII-B2-EC-B-043","XIII-B2-EC-B-044","XIII-B2-EC-B-045",
+  "XIII-B2-EC-B-046","XIII-B2-EC-B-047","XIII-B2-EC-B-048","XIII-B2-EC-B-049",
+  "XIII-B2-EC-B-050","XIII-B2-EC-B-051","XIII-B2-EC-B-052","XIII-B2-EC-B-053",
+
+  // === FF series (001–025) ===
+  "XIII-B2-FF-001","XIII-B2-FF-002","XIII-B2-FF-003","XIII-B2-FF-004",
+  "XIII-B2-FF-005","XIII-B2-FF-006","XIII-B2-FF-007","XIII-B2-FF-008",
+  "XIII-B2-FF-009","XIII-B2-FF-010","XIII-B2-FF-011","XIII-B2-FF-012",
+  "XIII-B2-FF-013","XIII-B2-FF-014","XIII-B2-FF-015","XIII-B2-FF-016",
+  "XIII-B2-FF-017","XIII-B2-FF-018","XIII-B2-FF-019","XIII-B2-FF-020",
+  "XIII-B2-FF-021","XIII-B2-FF-022","XIII-B2-FF-023","XIII-B2-FF-024",
+  "XIII-B2-FF-025",
+
+  // === WD series (001–028) ===
+  "XIII-B2-WD-001","XIII-B2-WD-002","XIII-B2-WD-003","XIII-B2-WD-004",
+  "XIII-B2-WD-005","XIII-B2-WD-006","XIII-B2-WD-007","XIII-B2-WD-008",
+  "XIII-B2-WD-009","XIII-B2-WD-010","XIII-B2-WD-011","XIII-B2-WD-012",
+  "XIII-B2-WD-013","XIII-B2-WD-014","XIII-B2-WD-015","XIII-B2-WD-016",
+  "XIII-B2-WD-017","XIII-B2-WD-018","XIII-B2-WD-019","XIII-B2-WD-020",
+  "XIII-B2-WD-021","XIII-B2-WD-022","XIII-B2-WD-023","XIII-B2-WD-024",
+  "XIII-B2-WD-025","XIII-B2-WD-026","XIII-B2-WD-027","XIII-B2-WD-028",
+
+
+
+  ];
+
+  const systemPassword = "gcuh123"; // single password for all
+
+
+  function validateForm() {
+    let user = document.getElementById("username").value.trim();
+    let pass = document.getElementById("password").value.trim();
+    let valid = true;
+
+    document.getElementById("userError").innerHTML = "";
+    document.getElementById("passError").innerHTML = "";
+
+    // Roll number check
+    if (!authorizedUsers.includes(user)) {
+      document.getElementById("userError").innerHTML = "Invalid Roll Number!";
+      valid = false;
+    }
+
+    // Password check
+    if (pass !== systemPassword) {
+      document.getElementById("passError").innerHTML = "Incorrect Password!";
+      valid = false;
+    }
+
+    if (valid) {
+      // Redirect to student page
+       window.location.href = "../01/stddashboard.html";
+
+    }
+
+    return false; // prevent form default submit
+  }
+</script>
+
+</html>
